@@ -58,14 +58,14 @@ def main():
             if not text:
                 print('Sorry, I did not hear you.')
             else:
-                if 'denis' in text:
-                    os.system('aplay /home/pi/AIY-projects-python/src/sounds/ah.wav')
-                elif 'coding' in text:
+                if 'coding' in text.lower():
                     aiy.audio.say('En septembre 2017, ITESCIA ouvre une ecole du code : la Coding Factory by ITESCIA.')
-                elif 'flo' or 'florian' in text:
+                elif 'flo' in text.lower():
                     aiy.audio.say('je suis flo un codeur de la Coding Factory')
+                elif 'fenis' in text.lower():
+                    os.system('aplay /home/pi/AIY-projects-python/src/sounds/ah.wav')
                 else:
-                    aiy.audio.say('Articule s\'il te plait')
+                    aiy.audio.say('Articule s\'iol te plait')
                 print('You said', text)
 
 
