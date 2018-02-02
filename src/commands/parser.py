@@ -8,10 +8,11 @@ class Parser:
         commands = []
         actions = []
         for line in self.file:
-            line = line.replace('\n', ' ')
-            line = line.split(' <> ')
-            commands.append(line[0])
-            actions.append(line[1])
+            if not line.startswith('#'): # Alow us to comment lines
+                line = line.replace('\n', ' ')
+                line = line.split(' <> ')
+                commands.append(line[0])
+                actions.append(line[1])
         self.setCommands(commands)
         self.setActions(actions)
 
