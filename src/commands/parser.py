@@ -1,16 +1,19 @@
+#!/usr/bin/env python3
+
 class Parser:
     def __init__(self, filepath):
         self.file = open(filepath, 'r+')
 
     def parse (self):
         commands = []
-        action = []
+        actions = []
         for line in self.file:
             line = line.replace('\n', ' ')
-            line = line.split(' : ')
+            line = line.split(' <> ')
             commands.append(line[0])
-            action.append(line[1])
+            actions.append(line[1])
         self.setCommands(commands)
+        self.setActions(actions)
 
     def setCommands(self,commandsArray):
         self.commands = commandsArray
@@ -24,7 +27,3 @@ class Parser:
     def getActions(self):
         return self.actions
 
-app = Parser('commands.lib')
-app.parse()
-for command in app.getCommands():
-    print(command)

@@ -1,26 +1,17 @@
 #!/usr/bin/env python3
-# Copyright 2017 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
-"""A demo of the Google CloudSpeech recognizer."""
+"""A test of the Google CloudSpeech recognizer."""
 import logging
 import os
 
+# Google imports
 import aiy.assistant.grpc
 import aiy.audio
 import aiy.voicehat
 import aiy.cloudspeech
+
+# Personal imports
+from commands.parser import Parser
 
 logging.basicConfig(
     level=logging.INFO,
@@ -36,11 +27,11 @@ def main():
     assistant = aiy.assistant.grpc.get_assistant()
     recognizer = aiy.cloudspeech.get_recognizer()
 
-    recognizer.expect_phrase('flo')
-    recognizer.expect_phrase('Denis')    
-    recognizer.expect_phrase('denis')
-    recognizer.expect_phrase('florian')
-    recognizer.expect_phrase('coding')
+    # recognizer.expect_phrase('flo')
+    # recognizer.expect_phrase('Denis')    
+    # recognizer.expect_phrase('denis')
+    # recognizer.expect_phrase('florian')
+    # recognizer.expect_phrase('coding')
 
     button = aiy.voicehat.get_button()
     led = aiy.voicehat.get_led()
@@ -58,14 +49,23 @@ def main():
             if not text:
                 print('Sorry, I did not hear you.')
             else:
-                if 'coding' in text.lower():
-                    aiy.audio.say('En septembre 2017, ITESCIA ouvre une ecole du code : la Coding Factory by ITESCIA.')
-                elif 'flo' in text.lower():
-                    aiy.audio.say('je suis flo un codeur de la Coding Factory')
-                elif 'fenis' in text.lower():
-                    os.system('aplay /home/pi/AIY-projects-python/src/sounds/ah.wav')
-                else:
-                    aiy.audio.say('Articule s\'iol te plait')
+                app = Parser('src/commands/commands.lib')
+                app.parse()
+                commands = app.getCommands()
+                actions = app.getActions()
+                noMatches = 0
+                for i in range(0, len(commands)):
+                    if commands[i].startswith('sound->'):
+                        if commands[i].replace('sound->', '').strip() in text.lower():
+                            os.system('aplay /home/pi/AIY-projects-python/src/sounds/'+ actions[i].strip())
+                            break
+                    elif commands[i].strip() in text.lower():
+                        aiy.audio.say(actions[i])
+                        break
+                    else:
+                        noMatches = noMatches + 1
+                if noMatches == len(commands):
+                   aiy.audio.say('Articule s\'il te plait')
                 print('You said', text)
 
 
