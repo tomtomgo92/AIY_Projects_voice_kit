@@ -70,10 +70,6 @@ def main():
                         action = actions[i].split(' | ')
                         randNum = random.randint(0, len(action) - 1)
                         os.system('aplay ' + soundPath + action[randNum])
-                    elif commands[i].replace('randomtroll->', '').strip() in text.lower():
-                        action = actions[i].split(' | ')
-                        randNum = random.randint(0, len(action) - 1)
-                        os.system('aplay ' + soundPath + action[randNum])
                     elif commands[i].strip() in text.lower():
                         aiy.audio.say(actions[i])
                         break
